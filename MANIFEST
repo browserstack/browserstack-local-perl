@@ -1,0 +1,6 @@
+Changes
+Makefile.PL
+MANIFEST
+README
+t/BrowserStack-Local.t
+lib/BrowserStack/Local.pm
