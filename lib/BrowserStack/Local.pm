@@ -36,7 +36,6 @@ our $VERSION = '0.01';
 my $handle;
 my $binary_path;
 my $pid;
-my @possiblebinarypaths = ($ENV{HOME} . "/.browserStack", getcwd);
 
 sub new {
     my $self = {
@@ -44,9 +43,7 @@ sub new {
     };
     
     bless $self;
-    $self->{binary_path} = "/Users/nidhi/.browserstack/BrowserStackLocal";
     $self->{logfile} = getcwd . "/local.log";
-    
     return $self;
 }
 
@@ -122,26 +119,26 @@ sub start {
         $self->add_args($_,$args{$_});
     }
 
+    $self->check_binary();
     my $command = $self->command();
     
     $self->{pid} = open $self->{handle}, "$command |";
-    print $self->{pid};
 
     open(my $loghandle, , '<', $self->{logfile});
-    sleep(3);
-    # while (my $line , '<', <$loghandle>) {
-    #     print $line;
-    #     chomp $line;
-    #     print $line;
-    #     if ($line  =~ /Press Ctrl-C to exit/) {
-    #         close $loghandle;
-    #         last;
-    #     }
-    #     if ($line =~ m/Error/) {
-    #         close $loghandle;
-    #         die $line;
-    #     }
-    # }
+    while (my $line = <$loghandle>) {
+        print $line;
+        chomp $line;
+        print $line;
+        if ($line  =~ /Press Ctrl-C to exit/) {
+            close $loghandle;
+            return;
+        }
+        if ($line =~ /Error/) {
+            close $loghandle;
+            die $line;
+            return;
+        }
+    }
 }
 
 sub stop {
@@ -157,8 +154,32 @@ sub command {
 }
 
 sub check_binary {
-    my ($self) = @_;
+    my @possiblebinarypaths = ($ENV{HOME} . "/.browserstack", getcwd);
 
+    my ($self) = @_;
+    if (defined $self->{binary_path}) {
+        if (-x $self->{binary_path} || -X $self->{binary_path}) {
+            return 1;
+        }
+    }
+    else
+    {
+        for (my $i=0; $i <= 1; $i++) {
+            $self->{binary_path} = $possiblebinarypaths[$i] . "/BrowserStackLocal";
+            print $self->{binary_path};
+         
+            if (-x $self->{binary_path} || -X $self->{binary_path}) {
+                return 1;
+            }
+            else
+            {
+                $self->download_binary();
+            }
+            if (-x $self->{binary_path} || -X $self->{binary_path}) {
+                return 1;}
+        }
+    }
+    return 0;
 }
 
 sub platform_url {
@@ -178,17 +199,11 @@ sub platform_url {
 }
 
 
-sub prepare_binary {
+sub download_binary {
     my ($self) = @_;
     my $url = $self->platform_url();
-    my $hello = get $url;
-    # my $dir = File::Temp->newdir;
-    # chdir $dir
-    # chdir $olddir
-    # foreach (@possiblebinarypaths)
-    # {
-    #   SubRoutine($_);
-    # }
+    my $url = get $url;
+    chmod 0777, $self->{binary_path};
 }
 
 1;
