@@ -1,3 +1,4 @@
+
 package BrowserStack::Local;
 
 use 5.018002;
@@ -34,31 +35,31 @@ our $VERSION = '0.01';
 
 my $handle;
 my $binary_path;
-
+my $pid;
 my @possiblebinarypaths = ($ENV{HOME} . "/.browserStack", getcwd);
 
 sub new {
     my $self = {
         key => $ENV{'BROWSERSTACK_KEY'},
     };
-
     
     bless $self;
-
-    $self->{binary_path}="./BrowserStackLocal";
+    $self->{binary_path} = "/Users/nidhi/.browserstack/BrowserStackLocal";
+    $self->{logfile} = getcwd . "/local.log";
+    
     return $self;
 }
 
 sub isRunning {
-    my $host = 'localhost';
-    my $port = '45691';
-    my $socket = IO::Socket::INET->new(PeerAddr => $host , PeerPort => $port , Proto => 'tcp' , Timeout => 1);
-    if ($socket){
-        return 1;
-    }
-    else
-    {
+    my ($self) = @_;
+    if (defined $self->{pid}) {
+        my $exists = kill 0, $self->{pid};
+        if ($exists) { 
+            return 1;
+        }
         return 0;
+    } else {
+    return 0;
     }
 }
 
@@ -69,8 +70,11 @@ sub add_args {
     if ($arg_key eq "key") {
         $self->{key} = $value;
     }
-    elsif ($arg_key eq "v") {
-        $self->{verbose_flag} = "-v";
+    elsif ($arg_key eq "binaryPath") {
+        $self->{binary_path} = $value;
+    }
+    elsif ($arg_key eq "logfile") {
+        $self->{logfile} = $value;
     }
     elsif ($arg_key eq "v") {
         $self->{verbose_flag} = "-v";
@@ -117,33 +121,44 @@ sub start {
     foreach (keys %args) {
         $self->add_args($_,$args{$_});
     }
-    my $command = $self->command();
-    open $handle, "$command |";
-    while (my $line = <$handle>) 
-     {
-        
-         chomp $line;
-         if ($line eq "Press Ctrl-C to exit")
-         {
-            last;
-         }
-         if ($line =~ /Error/) {
-             print "$line";
-        }
-     }
-}
 
+    my $command = $self->command();
+    
+    $self->{pid} = open $self->{handle}, "$command |";
+    print $self->{pid};
+
+    open(my $loghandle, , '<', $self->{logfile});
+    sleep(3);
+    # while (my $line , '<', <$loghandle>) {
+    #     print $line;
+    #     chomp $line;
+    #     print $line;
+    #     if ($line  =~ /Press Ctrl-C to exit/) {
+    #         close $loghandle;
+    #         last;
+    #     }
+    #     if ($line =~ m/Error/) {
+    #         close $loghandle;
+    #         die $line;
+    #     }
+    # }
+}
 
 sub stop {
     my ($self) = @_;
-    close ($handle);
+    close ($self->{handle});
 }
 
 sub command {
     my ($self) = @_;
-    my $command = "$self->{binary_path} $self->{folder_flag} $self->{folder_flag} $self->{key} $self->{folder_path} $self->{force_local_flag} $self->{local_identifier_flag} $self->{only_flag} $self->{only_automate_flag} $self->{proxy_host} $self->{proxy_port} $self->{proxy_user} $self->{proxy_pass} $self->{force_flag} $self->{verbose_flag} $self->{hosts}";
+    my $command = "$self->{binary_path} -logFile $self->{logfile} $self->{folder_flag} $self->{folder_flag} $self->{key} $self->{folder_path} $self->{force_local_flag} $self->{local_identifier_flag} $self->{only_flag} $self->{only_automate_flag} $self->{proxy_host} $self->{proxy_port} $self->{proxy_user} $self->{proxy_pass} $self->{force_flag} $self->{verbose_flag} $self->{hosts} www.browserstack.com";
     $command =~ s/(?<!\w) //g;
     return $command;
+}
+
+sub check_binary {
+    my ($self) = @_;
+
 }
 
 sub platform_url {
