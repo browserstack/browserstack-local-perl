@@ -9,7 +9,8 @@ use LWP::Simple;
 use File::Temp;
 use Config;
 use Cwd;
-
+use File::Temp qw(tempdir);
+ 
 require Exporter;
 
 our @ISA = qw(Exporter);
@@ -154,7 +155,7 @@ sub command {
 }
 
 sub check_binary {
-    my @possiblebinarypaths = ($ENV{HOME} . "/.browserstack", getcwd);
+    my @possiblebinarypaths = ($ENV{HOME} . "/.browserstack", getcwd, tempdir( CLEANUP => 1 ););
 
     my ($self) = @_;
     if (defined $self->{binary_path}) {
@@ -164,7 +165,7 @@ sub check_binary {
     }
     else
     {
-        for (my $i=0; $i <= 1; $i++) {
+        for (my $i=0; $i <= 2; $i++) {
             $self->{binary_path} = $possiblebinarypaths[$i] . "/BrowserStackLocal";
             print $self->{binary_path};
          
