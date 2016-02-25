@@ -127,7 +127,6 @@ sub start {
 
     open(my $loghandle, , '<', $self->{logfile});
     while (my $line = <$loghandle>) {
-        print $line;
         chomp $line;
         print $line;
         if ($line  =~ /Press Ctrl-C to exit/) {
@@ -155,7 +154,7 @@ sub command {
 }
 
 sub check_binary {
-    my @possiblebinarypaths = ($ENV{HOME} . "/.browserstack", getcwd, tempdir( CLEANUP => 1 ););
+    my @possiblebinarypaths = ($ENV{HOME} . "/.browserstack", getcwd, tempdir( CLEANUP => 1 ));
 
     my ($self) = @_;
     if (defined $self->{binary_path}) {
@@ -167,8 +166,7 @@ sub check_binary {
     {
         for (my $i=0; $i <= 2; $i++) {
             $self->{binary_path} = $possiblebinarypaths[$i] . "/BrowserStackLocal";
-            print $self->{binary_path};
-         
+            
             if (-x $self->{binary_path} || -X $self->{binary_path}) {
                 return 1;
             }
