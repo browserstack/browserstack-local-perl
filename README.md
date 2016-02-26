@@ -13,12 +13,12 @@ make install
 
 ### Constructor
 
-* `new browserstack.Local()`: creates an instance of Local
+* `BrowserStack::Local::new`: creates an instance of Local
 
 ### Methods
 
-* `start(options, callback)`: starts Local instance with options. The options available are detailed below.
-* `stop(callback)`: stops the Local instance
+* `start(%args)`: starts Local instance with options. The options available are detailed below.
+* `stop()`: stops the Local instance
 * `isRunning()`: checks if Local instance is running and returns a corresponding boolean value
 
 The first and only argument to any callback function will be an error object.
