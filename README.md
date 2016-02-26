@@ -48,5 +48,5 @@ To run the test suite run - `make test`.
 
 ## Example
 
-To run the example run - `perl example.pm`.
+To run the example run - `perl example.pl`.
 
