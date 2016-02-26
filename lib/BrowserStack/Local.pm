@@ -73,7 +73,7 @@ sub add_args {
     $self->{logfile} = $value;
   }
   elsif ($arg_key eq "v") {
-    $self->{verbose_flag} = "-v";
+    $self->{verbose_flag} = "-vvv";
   }
   elsif ($arg_key eq "force") {
     $self->{force_flag} = "-force";
@@ -119,6 +119,8 @@ sub start {
     $self->add_args($_,$args{$_});
   }
 
+  return if exists $args{'onlyCommand'};
+
   $self->check_binary();
   my $command = $self->command();
   
@@ -139,6 +141,7 @@ sub start {
       }
       if ($line =~ /Error/) {
         close $loghandle;
+        $self->stop();
         #throw Exception->new($line);
         die $line;
         return;

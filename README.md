@@ -43,7 +43,7 @@ The first and only argument to any callback function will be an error object.
 
 ## Tests
 
-To run the test suite install `Test::More` and `Test::Class` cpan modules then run - `make test`.
+To run the test suite install `Test::Simple`, `Test::Class` and `TryCatch` cpan modules then run - `make test`.
 
 ## Example
 
