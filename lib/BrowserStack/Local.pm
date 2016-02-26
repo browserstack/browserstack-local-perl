@@ -66,7 +66,7 @@ sub add_args {
   if ($arg_key eq "key") {
     $self->{key} = $value;
   }
-  elsif ($arg_key eq "binaryPath") {
+  elsif ($arg_key eq "binarypath") {
     $self->{binary_path} = $value;
   }
   elsif ($arg_key eq "logfile") {
