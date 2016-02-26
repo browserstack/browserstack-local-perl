@@ -3,19 +3,18 @@ push (@INC,'pwd');
 use BrowserStack::Local;
 
 my %args = (
-        "v" => 1
-        );
+  "v" => 1
+);
 
-$driver = BrowserStack::Local::new;
-print $driver->isRunning();
+my $local = BrowserStack::Local::new;
+print $local->isRunning();
 print "Starting";
-$driver->start(%args);
+$local->start(%args);
 print "Started";
-print $driver->isRunning();
+print $local->isRunning();
 
 print "Stopping";
-$driver->stop();
+$local->stop();
 print "Stopped";
-print $driver->isRunning();
-
+print $local->isRunning();
 

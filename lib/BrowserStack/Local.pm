@@ -150,6 +150,9 @@ sub start {
 
 sub stop {
   my ($self) = @_;
+  if(0 == $self->isRunning()) { 
+    return;
+  }
   kill -9, $self->{pid};
   close ($self->{handle});
 }
