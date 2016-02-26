@@ -116,6 +116,7 @@ sub add_args {
 
 sub start {
     my ($self, %args) = @_;
+    system("rm $self->{logfile}");
     foreach (keys %args) {
         $self->add_args($_,$args{$_});
     }
@@ -127,6 +128,7 @@ sub start {
 
     open(my $loghandle, , '<', $self->{logfile});
     while (my $line = <$loghandle>) {
+        print $line;
         chomp $line;
         print $line;
         if ($line  =~ /Press Ctrl-C to exit/) {
@@ -135,9 +137,11 @@ sub start {
         }
         if ($line =~ /Error/) {
             close $loghandle;
+            #throw Exception->new($line);
             die $line;
             return;
         }
+        sleep(1);
     }
 }
 
