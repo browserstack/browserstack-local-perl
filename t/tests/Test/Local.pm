@@ -6,7 +6,7 @@ use TryCatch;
 
 use BrowserStack::Local;
 
-sub make_fixture : Test(setup) {
+sub setup : Test(setup) {
   my $local = BrowserStack::Local::new;
   shift->{local} = $local;
 }
@@ -137,7 +137,6 @@ sub test_set_hosts : Test {
 sub teardown : Test(teardown) {
   my $local = shift->{local};
   $local->stop();
-  diag("array = (@$array) after test(s)");
 }
 
 1;
