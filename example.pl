@@ -12,7 +12,7 @@ print "Starting";
 $driver->start(%args);
 print "Started";
 print $driver->isRunning();
-sleep(5);
+
 print "Stopping";
 $driver->stop();
 print "Stopped";

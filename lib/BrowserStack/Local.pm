@@ -10,7 +10,7 @@ use File::Temp;
 use Config;
 use Cwd;
 use File::Temp qw(tempdir);
- 
+
 require Exporter;
 
 our @ISA = qw(Exporter);
@@ -122,21 +122,17 @@ sub start {
   $self->check_binary();
   my $command = $self->command();
   
-  #$self->{pid} = open $self->{handle}, "$command |";
-
-  my $pid = open($self->{handle}, "-|");
+  my $pid = $self->{pid} = open($self->{handle}, "-|");
   if (0 == $pid) {
     setpgrp(0, 0);
     exec $command;
     die "exec failed: $!\n";
   }
   else {
-    print $self->{pid};
     open(my $loghandle, , '<', $self->{logfile});
     while (1) {
       my $line = <$loghandle>;
       chomp $line;
-      print $line;
       if ($line  =~ /Press Ctrl-C to exit/) {
         close $loghandle;
         return;
@@ -154,12 +150,8 @@ sub start {
 
 sub stop {
   my ($self) = @_;
-  print "in stop";
-  print $self->{pid};
-  kill '-HUP', $self->{pid};
-  kill 'KILL', $self->{pid};
+  kill -9, $self->{pid};
   close ($self->{handle});
-  print "Done";
 }
 
 sub command {
