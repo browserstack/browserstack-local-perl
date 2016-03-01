@@ -205,7 +205,7 @@ sub platform_url {
     return "http://s3.amazonaws.com/bs-automate-prod/local/BrowserStackLocal-win32.exe";
   }
   if ($^O =~ "linux") {
-    if (Config{'longsize'} == 8) {
+    if ($Config{longsize} == 8) {
       return "http://s3.amazonaws.com/bs-automate-prod/local/BrowserStackLocal-linux-x64";
     } 
     else {
