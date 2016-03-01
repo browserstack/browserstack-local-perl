@@ -54,8 +54,9 @@ sub isRunning {
       return 1;
     }
     return 0;
-  } else {
-  return 0;
+  } 
+  else {
+    return 0;
   }
 }
 
@@ -121,7 +122,7 @@ sub start {
 
   return if exists $args{'onlyCommand'};
 
-  $self->check_binary();
+  $self->get_binary_path();
   my $command = $self->command();
   
   my $pid = $self->{pid} = open($self->{handle}, "-|");
@@ -167,55 +168,55 @@ sub command {
   return $command;
 }
 
-sub check_binary {
+sub get_binary_path {
+  my ($self) = @_;
+  my $path = $self->get_available_path();
+
+  $self->{binary_path} = $path . "/BrowserStackLocal";   
+  if (-x $self->{binary_path} || -X $self->{binary_path}) {
+    return 1;
+  } 
+  else {
+    $self->download_binary();
+  }
+
+}
+
+sub get_available_path {
   my @possiblebinarypaths = ($ENV{HOME} . "/.browserstack", getcwd, tempdir( CLEANUP => 1 ));
 
   my ($self) = @_;
-  if (defined $self->{binary_path}) {
-    if (-x $self->{binary_path} || -X $self->{binary_path}) {
-      return 1;
+  for (my $i=0; $i <= 2; $i++) {
+    my $path = $possiblebinarypaths[$i];
+    
+    if (-x $path || -X $path || make_path($path)) {
+      return $path;
     }
   }
-  else
-  {
-    for (my $i=0; $i <= 2; $i++) {
-      $self->{binary_path} = $possiblebinarypaths[$i] . "/BrowserStackLocal";
-      
-      if (-x $self->{binary_path} || -X $self->{binary_path}) {
-        return 1;
-      }
-      else
-      {
-        $self->download_binary();
-      }
-      if (-x $self->{binary_path} || -X $self->{binary_path}) {
-        return 1;}
-    }
-  }
-  return 0;
+  die "Error trying to download BrowserStack Local binary";
 }
 
 sub platform_url {
   if ($^O =~ "darwin") {
-  return "https://s3.amazonaws.com/bs-automate-prod/local/BrowserStackLocal-darwin-x64";
+    return "http://s3.amazonaws.com/bs-automate-prod/local/BrowserStackLocal-darwin-x64";
   }
   elsif ($^O =~ /^Win/) {
-  return "https://s3.amazonaws.com/bs-automate-prod/local/BrowserStackLocal-win32.exe";
+    return "http://s3.amazonaws.com/bs-automate-prod/local/BrowserStackLocal-win32.exe";
   }
   if ($^O =~ "linux") {
-  if (Config{'longsize'} == 8) {
-    return "https://s3.amazonaws.com/bs-automate-prod/local/BrowserStackLocal-linux-x64";
-  } else {
-    return "https://s3.amazonaws.com/bs-automate-prod/local/BrowserStackLocal-linux-ia32";
-  }  
+    if (Config{'longsize'} == 8) {
+      return "http://s3.amazonaws.com/bs-automate-prod/local/BrowserStackLocal-linux-x64";
+    } 
+    else {
+      return "http://s3.amazonaws.com/bs-automate-prod/local/BrowserStackLocal-linux-ia32";
+    }  
   }
 }
-
 
 sub download_binary {
   my ($self) = @_;
   my $url = $self->platform_url();
-  my $url = get $url;
+  getstore($url, $self->{binary_path});
   chmod 0777, $self->{binary_path};
 }
 
