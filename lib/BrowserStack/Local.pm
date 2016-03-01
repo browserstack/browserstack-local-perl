@@ -197,16 +197,16 @@ sub check_binary {
 
 sub platform_url {
   if ($^O =~ "darwin") {
-  return "https://s3.amazonaws.com/browserStack/browserstack-local/BrowserStackLocal-darwin-x64";
+  return "https://s3.amazonaws.com/bs-automate-prod/local/BrowserStackLocal-darwin-x64";
   }
   elsif ($^O =~ /^Win/) {
-  return "https://s3.amazonaws.com/browserStack/browserstack-local/BrowserStackLocal.exe";
+  return "https://s3.amazonaws.com/bs-automate-prod/local/BrowserStackLocal-win32.exe";
   }
   if ($^O =~ "linux") {
   if (Config{'longsize'} == 8) {
-    return "https://s3.amazonaws.com/browserStack/browserstack-local/BrowserStackLocal-linux-x64";
+    return "https://s3.amazonaws.com/bs-automate-prod/local/BrowserStackLocal-linux-x64";
   } else {
-    return "https://s3.amazonaws.com/browserStack/browserstack-local/BrowserStackLocal-linux-ia32";
+    return "https://s3.amazonaws.com/bs-automate-prod/local/BrowserStackLocal-linux-ia32";
   }  
   }
 }
