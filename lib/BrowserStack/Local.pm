@@ -10,6 +10,7 @@ use File::Temp;
 use Config;
 use Cwd;
 use File::Temp qw(tempdir);
+use File::Path qw(make_path);
 
 require Exporter;
 
