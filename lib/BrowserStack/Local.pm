@@ -127,13 +127,13 @@ sub start {
   my $command = $self->command();
   
   if ($^O =~ /Win/){
-    my $pid = $self->{pid} = open($self->{handle}, "$command |");
+    $pid = $self->{pid} = open($self->{handle}, "$command |");
   }
   else {
-    my $pid = $self->{pid} = open($self->{handle}, "-|");
+    $pid = $self->{pid} = open($self->{handle}, "-|");
   }
   
-  if ($^O =~ /^Win/ && 0 == $pid) {
+  if (0 == $pid) {
     setpgrp(0, 0);
     exec $command;
     die "exec failed: $!\n";
