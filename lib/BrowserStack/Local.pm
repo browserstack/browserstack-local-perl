@@ -126,8 +126,14 @@ sub start {
   $self->get_binary_path();
   my $command = $self->command();
   
-  my $pid = $self->{pid} = open($self->{handle}, "-|");
-  if (0 == $pid) {
+  if ($^O =~ /Win/){
+    my $pid = $self->{pid} = open($self->{handle}, "$command |");
+  }
+  else {
+    my $pid = $self->{pid} = open($self->{handle}, "-|");
+  }
+  
+  if ($^O =~ /^Win/ && 0 == $pid) {
     setpgrp(0, 0);
     exec $command;
     die "exec failed: $!\n";
@@ -180,10 +186,12 @@ sub get_binary_path {
   else {
     $self->download_binary();
   }
-
 }
 
 sub get_available_path {
+  if ($^O =~ /Win/){
+    $ENV{HOME} = $ENV{USERPROFILE};
+  }
   my @possiblebinarypaths = ($ENV{HOME} . "/.browserstack", getcwd, tempdir( CLEANUP => 1 ));
 
   my ($self) = @_;
@@ -199,17 +207,17 @@ sub get_available_path {
 
 sub platform_url {
   if ($^O =~ "darwin") {
-    return "http://s3.amazonaws.com/bs-automate-prod/local/BrowserStackLocal-darwin-x64";
+    return "http://s3.amazonaws.com/browserStack/browserstack-local/BrowserStackLocal-darwin-x64";
   }
   elsif ($^O =~ /^Win/) {
-    return "http://s3.amazonaws.com/bs-automate-prod/local/BrowserStackLocal-win32.exe";
+    return "http://s3.amazonaws.com/browserStack/browserstack-local/BrowserStackLocal.exe";
   }
   if ($^O =~ "linux") {
     if ($Config{longsize} == 8) {
-      return "http://s3.amazonaws.com/bs-automate-prod/local/BrowserStackLocal-linux-x64";
+      return "http://s3.amazonaws.com/browserStack/browserstack-local/BrowserStackLocal-linux-x64";
     } 
     else {
-      return "http://s3.amazonaws.com/bs-automate-prod/local/BrowserStackLocal-linux-ia32";
+      return "http://s3.amazonaws.com/browserStack/browserstack-local/BrowserStackLocal-linux-ia32";
     }  
   }
 }
