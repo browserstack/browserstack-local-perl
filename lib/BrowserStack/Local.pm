@@ -104,6 +104,9 @@ sub add_args {
   elsif ($arg_key eq "proxyPass") {
     $self->{proxy_pass} = "-proxyPass $value";
   }
+  elsif ($arg_key eq "forceproxy") {
+    $self->{force_proxy_flag} = "-forceproxy";
+  }
   elsif ($arg_key eq "hosts") {
     $self->{hosts} = $value;
   }
@@ -170,7 +173,7 @@ sub stop {
 
 sub command {
   my ($self) = @_;
-  my $command = "$self->{binary_path} -logFile $self->{logfile} $self->{folder_flag} $self->{folder_flag} $self->{key} $self->{folder_path} $self->{force_local_flag} $self->{local_identifier_flag} $self->{only_flag} $self->{only_automate_flag} $self->{proxy_host} $self->{proxy_port} $self->{proxy_user} $self->{proxy_pass} $self->{force_flag} $self->{verbose_flag} $self->{hosts}";
+  my $command = "$self->{binary_path} -logFile $self->{logfile} $self->{folder_flag} $self->{folder_flag} $self->{key} $self->{folder_path} $self->{force_local_flag} $self->{local_identifier_flag} $self->{only_flag} $self->{only_automate_flag} $self->{proxy_host} $self->{proxy_port} $self->{proxy_user} $self->{proxy_pass} $self->{force_proxy_flag} $self->{force_flag} $self->{verbose_flag} $self->{hosts}";
   $command =~ s/(?<!\w) //g;
   return $command;
 }
