@@ -97,6 +97,16 @@ sub test_enable_force_local : Test {
   like($local->command(), '/-forcelocal/i', 'matches -forcelocal');
 }
 
+sub test_enable_force_proxy : Test {
+  my $local = shift->{local};
+  my %args = (
+    "forceproxy" => 1, "onlyCommand" => 1
+  );
+
+  $local->start(%args);
+  like($local->command(), '/-forceproxy/i', 'matches -forceproxy');
+}
+
 sub test_set_local_identifier : Test {
   my $local = shift->{local};
   my %args = (
