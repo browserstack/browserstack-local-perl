@@ -39,7 +39,7 @@ sub test_multiple_binary : Test {
 sub test_enable_verbose : Test {
   my $local = shift->{local};
   my %args = (
-    "v" => 1, "onlyCommand" => 1
+    "-v" => 1, "onlyCommand" => 1
   );
 
   $local->start(%args);
@@ -49,7 +49,7 @@ sub test_enable_verbose : Test {
 sub test_set_folder : Test(2) {
   my $local = shift->{local};
   my %args = (
-    "f" => '/var/html', "onlyCommand" => 1
+    "-f" => '/var/html', "onlyCommand" => 1
   );
 
   $local->start(%args);
@@ -60,7 +60,7 @@ sub test_set_folder : Test(2) {
 sub test_enable_force : Test {
   my $local = shift->{local};
   my %args = (
-    "force" => 1, "onlyCommand" => 1
+    "-force" => 1, "onlyCommand" => 1
   );
 
   $local->start(%args);
@@ -70,7 +70,7 @@ sub test_enable_force : Test {
 sub test_enable_only : Test {
   my $local = shift->{local};
   my %args = (
-    "only" => 1, "onlyCommand" => 1
+    "-only" => 1, "onlyCommand" => 1
   );
 
   $local->start(%args);
@@ -80,7 +80,7 @@ sub test_enable_only : Test {
 sub test_enable_only_automate : Test {
   my $local = shift->{local};
   my %args = (
-    "onlyAutomate" => 1, "onlyCommand" => 1
+    "-onlyAutomate" => 1, "onlyCommand" => 1
   );
 
   $local->start(%args);
@@ -90,7 +90,7 @@ sub test_enable_only_automate : Test {
 sub test_enable_force_local : Test {
   my $local = shift->{local};
   my %args = (
-    "forcelocal" => 1, "onlyCommand" => 1
+    "-forcelocal" => 1, "onlyCommand" => 1
   );
 
   $local->start(%args);
@@ -100,7 +100,7 @@ sub test_enable_force_local : Test {
 sub test_enable_force_proxy : Test {
   my $local = shift->{local};
   my %args = (
-    "forceproxy" => 1, "onlyCommand" => 1
+    "-forceproxy" => 1, "onlyCommand" => 1
   );
 
   $local->start(%args);
@@ -110,7 +110,7 @@ sub test_enable_force_proxy : Test {
 sub test_set_local_identifier : Test {
   my $local = shift->{local};
   my %args = (
-    "localIdentifier" => "abcdef", "onlyCommand" => 1
+    "-localIdentifier" => "abcdef", "onlyCommand" => 1
   );
 
   $local->start(%args);
@@ -120,10 +120,10 @@ sub test_set_local_identifier : Test {
 sub test_set_proxy : Test(4) {
   my $local = shift->{local};
   my %args = (
-    "proxyHost" => "localhost", 
-    "proxyPort" => 8080,
-    "proxyUser" => "user",
-    "proxyPass" => "pass",
+    "-proxyHost" => "localhost", 
+    "-proxyPort" => 8080,
+    "-proxyUser" => "user",
+    "-proxyPass" => "pass",
     "onlyCommand" => 1
   );
 
@@ -137,7 +137,7 @@ sub test_set_proxy : Test(4) {
 sub test_set_hosts : Test {
   my $local = shift->{local};
   my %args = (
-    "hosts" => "localhost,8000,0", "onlyCommand" => 1
+    "-hosts" => "localhost,8000,0", "onlyCommand" => 1
   );
 
   $local->start(%args);
