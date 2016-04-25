@@ -3,7 +3,7 @@ push (@INC,'pwd');
 use BrowserStack::Local;
 
 my %args = (
-  "v" => 1
+  "-v" => 1
 );
 
 my $local = BrowserStack::Local::new;
