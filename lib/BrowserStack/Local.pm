@@ -44,6 +44,7 @@ sub new {
   
   bless $self;
   $self->{logfile} = getcwd . "/local.log";
+  $self->{userargs} = [];
   return $self;
 }
 
@@ -65,55 +66,61 @@ sub add_args {
   my ($self,@arguments) = @_;    
   my $arg_key = $arguments[0];
   my $value = $arguments[1];
-  if ($arg_key eq "-key") {
+  if ($arg_key eq "key") {
     $self->{key} = $value;
   }
-  elsif ($arg_key eq "-binarypath") {
+  elsif ($arg_key eq "binarypath") {
     $self->{binary_path} = $value;
   }
-  elsif ($arg_key eq "-logfile") {
+  elsif ($arg_key eq "logfile") {
     $self->{logfile} = $value;
   }
-  elsif ($arg_key eq "-v") {
+  elsif ($arg_key eq "v") {
     $self->{verbose_flag} = "-vvv";
   }
-  elsif ($arg_key eq "-force") {
+  elsif ($arg_key eq "force") {
     $self->{force_flag} = "-force";
   }
-  elsif ($arg_key eq "-only") {
+  elsif ($arg_key eq "only") {
     $self->{only_flag} = "-only";
   }
-  elsif ($arg_key eq "-onlyAutomate") {
+  elsif ($arg_key eq "onlyAutomate") {
     $self->{only_automate_flag} = "-onlyAutomate";
   }
-  elsif ($arg_key eq "-forcelocal") {
+  elsif ($arg_key eq "forcelocal") {
     $self->{force_local_flag} = "-forcelocal";
   }
-  elsif ($arg_key eq "-localIdentifier") {
+  elsif ($arg_key eq "localIdentifier") {
     $self->{local_identifier_flag} = "-localIdentifier $value";
   }
-  elsif ($arg_key eq "-proxyHost") {
+  elsif ($arg_key eq "proxyHost") {
     $self->{proxy_host} = "-proxyHost $value";
   }
-  elsif ($arg_key eq "-proxyPort") {
+  elsif ($arg_key eq "proxyPort") {
     $self->{proxy_port} = "-proxyPort $value";
   }
-  elsif ($arg_key eq "-proxyUser") {
+  elsif ($arg_key eq "proxyUser") {
     $self->{proxy_user} = "-proxyUser $value";
   }
-  elsif ($arg_key eq "-proxyPass") {
+  elsif ($arg_key eq "proxyPass") {
     $self->{proxy_pass} = "-proxyPass $value";
   }
-  elsif ($arg_key eq "-forceproxy") {
+  elsif ($arg_key eq "forceproxy") {
     $self->{force_proxy_flag} = "-forceproxy";
   }
-  elsif ($arg_key eq "-hosts") {
+  elsif ($arg_key eq "hosts") {
     $self->{hosts} = $value;
   }
-  elsif ($arg_key eq "-f") {
+  elsif ($arg_key eq "f") {
     $self->{folder_flag} = "-f";
     $self->{folder_path} = $value;
-  }   
+  }
+  elsif ($value eq 1) {
+    push ((@{$self->{userargs}}), "-$arg_key");
+  }
+  else {
+    push ((@{$self->{userargs}}), "-$arg_key '$value'");
+  }
 }
 
 
@@ -173,7 +180,8 @@ sub stop {
 
 sub command {
   my ($self) = @_;
-  my $command = "$self->{binary_path} -logFile $self->{logfile} $self->{folder_flag} $self->{folder_flag} $self->{key} $self->{folder_path} $self->{force_local_flag} $self->{local_identifier_flag} $self->{only_flag} $self->{only_automate_flag} $self->{proxy_host} $self->{proxy_port} $self->{proxy_user} $self->{proxy_pass} $self->{force_proxy_flag} $self->{force_flag} $self->{verbose_flag} $self->{hosts}";
+  my $userargs = join(' ', (@{$self->{userargs}}));
+  my $command = "$self->{binary_path} -logFile $self->{logfile} $self->{folder_flag} $self->{folder_flag} $self->{key} $self->{folder_path} $self->{force_local_flag} $self->{local_identifier_flag} $self->{only_flag} $self->{only_automate_flag} $self->{proxy_host} $self->{proxy_port} $self->{proxy_user} $self->{proxy_pass} $self->{force_proxy_flag} $self->{force_flag} $self->{verbose_flag} $self->{hosts} $userargs";
   $command =~ s/(?<!\w) //g;
   return $command;
 }
