@@ -1,0 +1,9 @@
+.git*
+_build*
+.travis.yml
+Build.PL
+example.pl
+local.log
+
+^MYMETA\.yml$
+^MYMETA\.json$
