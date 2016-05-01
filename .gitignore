@@ -2,7 +2,10 @@ local.log
 _build
 MYMETA.json
 MYMETA.yml
+META.json
+META.yml
 MANIFEST
+MANIFEST.bak
 Makefile
 blib/**
 pm_to_blib
