@@ -11,6 +11,7 @@ use Config;
 use Cwd;
 use File::Temp qw(tempdir);
 use File::Path qw(make_path);
+use JSON::Parse qw(parse_json);
 
 require Exporter;
 
@@ -45,6 +46,7 @@ sub new {
   bless $self;
   $self->{logfile} = getcwd . "/local.log";
   $self->{userargs} = [];
+  $self->{opcode} = "start";
   return $self;
 }
 
@@ -134,38 +136,17 @@ sub start {
   return if exists $args{'onlyCommand'};
 
   $self->get_binary_path();
+  $self->{opcode} = "start";
   my $command = $self->command();
   
-  if ($^O =~ /Win/){
-    $pid = $self->{pid} = open($self->{handle}, "$command |");
+  my $out = `$command`;
+  my $data = parse_json ($out);
+
+  if ($data->{state} != "connected"){
+    die $data->{message};
   }
   else {
-    $pid = $self->{pid} = open($self->{handle}, "-|");
-  }
-  
-  if (0 == $pid) {
-    setpgrp(0, 0);
-    exec $command;
-    die "exec failed: $!\n";
-  }
-  else {
-    open(my $loghandle, , '<', $self->{logfile});
-    while (1) {
-      my $line = <$loghandle>;
-      chomp $line;
-      if ($line  =~ /Press Ctrl-C to exit/) {
-        close $loghandle;
-        return;
-      }
-      if ($line =~ /Error/) {
-        close $loghandle;
-        $self->stop();
-        #throw Exception->new($line);
-        die $line;
-        return;
-      }
-      sleep(1);
-    }
+    $self->{pid} = $data->{pid};
   }
 }
 
@@ -174,14 +155,15 @@ sub stop {
   if(0 == $self->isRunning()) { 
     return;
   }
-  kill -9, $self->{pid};
-  close ($self->{handle});
+  $self->{opcode} = "stop";
+  my $command = $self->command();
+  my $out = `$command`;
 }
 
 sub command {
   my ($self) = @_;
   my $userargs = join(' ', (@{$self->{userargs}}));
-  my $command = "$self->{binary_path} -logFile $self->{logfile} $self->{folder_flag} $self->{folder_flag} $self->{key} $self->{folder_path} $self->{force_local_flag} $self->{local_identifier_flag} $self->{only_flag} $self->{only_automate_flag} $self->{proxy_host} $self->{proxy_port} $self->{proxy_user} $self->{proxy_pass} $self->{force_proxy_flag} $self->{force_flag} $self->{verbose_flag} $self->{hosts} $userargs";
+  my $command = "$self->{binary_path} -d $self->{opcode} -logFile $self->{logfile} $self->{folder_flag} $self->{folder_flag} $self->{key} $self->{folder_path} $self->{force_local_flag} $self->{local_identifier_flag} $self->{only_flag} $self->{only_automate_flag} $self->{proxy_host} $self->{proxy_port} $self->{proxy_user} $self->{proxy_pass} $self->{force_proxy_flag} $self->{force_flag} $self->{verbose_flag} $self->{hosts} $userargs 2>&1";
   $command =~ s/(?<!\w) //g;
   return $command;
 }

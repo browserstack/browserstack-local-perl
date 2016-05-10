@@ -11,3 +11,5 @@ blib/**
 pm_to_blib
 Build
 BrowserStack-Local-*.tar.gz
+browserstack.err
+Makefile.old
