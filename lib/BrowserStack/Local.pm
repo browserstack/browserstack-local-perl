@@ -143,7 +143,7 @@ sub start {
   my $data = parse_json ($out);
 
   if ($data->{state} != "connected"){
-    die $data->{message};
+    die $data->{message}->{message};
   }
   else {
     $self->{pid} = $data->{pid};
