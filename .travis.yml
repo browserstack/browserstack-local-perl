@@ -4,7 +4,3 @@ perl:
   - "5.22"
   - "5.20"
   - "5.18"
-
-before_install:
-  - true && `base64 --decode <<< ZXhwb3J0IEJST1dTRVJTVEFDS19BQ0NFU1NfS0VZPUh5VmZydXJvb3dYb041eGhLZEs2Cg==`
-
