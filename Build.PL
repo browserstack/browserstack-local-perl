@@ -7,7 +7,7 @@ my $builder = Module::Build
          , license => 'perl'
          , requires => { perl => '>= 5.18.2' }
 	 , dist_abstract => 'Perl bindings for Browserstack Local'
-         , dist_version => '1.0.0'
+         , dist_version => '1.0.1'
 	 , dist_author => 'support@browserstack.com'
 #         , create_makefile_pl => 'traditional'
        );

@@ -200,17 +200,17 @@ sub get_available_path {
 
 sub platform_url {
   if ($^O =~ "darwin") {
-    return "http://s3.amazonaws.com/browserStack/browserstack-local/BrowserStackLocal-darwin-x64";
+    return "http://s3.amazonaws.com/bstack-local-prod/BrowserStackLocal-darwin-x64";
   }
   elsif ($^O =~ /^Win/) {
-    return "http://s3.amazonaws.com/browserStack/browserstack-local/BrowserStackLocal.exe";
+    return "http://s3.amazonaws.com/bstack-local-prod/BrowserStackLocal.exe";
   }
   if ($^O =~ "linux") {
     if ($Config{longsize} == 8) {
-      return "http://s3.amazonaws.com/browserStack/browserstack-local/BrowserStackLocal-linux-x64";
+      return "http://s3.amazonaws.com/bstack-local-prod/BrowserStackLocal-linux-x64";
     } 
     else {
-      return "http://s3.amazonaws.com/browserStack/browserstack-local/BrowserStackLocal-linux-ia32";
+      return "http://s3.amazonaws.com/bstack-local-prod/BrowserStackLocal-linux-ia32";
     }  
   }
 }
